@@ -40,6 +40,7 @@ namespace ETL
                 AddCSVEntityDtoToETLEntityTable(table, csvEntityDto);
             }
 
+            // TODO: Make it write records in some kind of stream to use less memory for storing data in case we will perform a 10Gb CSV file
             await sqlBulk.WriteToServerAsync(table);
         }
 
