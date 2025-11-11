@@ -20,6 +20,7 @@ namespace ETL
 
         static async Task Main(string[] args)
         {
+            // TODO: Use one stream for performing both getUnique and duplicates operations
             var uniqueRecords = GetUniqueCSVRecords();
             var duplicates = GetDuplicatedCSVRecords();
             SaveDuplicatedCSVRecords(duplicates);
@@ -64,7 +65,7 @@ namespace ETL
             using (var writer = new StreamWriter(DUPLICATES_FILE_PATH))
             using (var csv = new CsvWriter(writer, config))
             {
-                csv.Context.RegisterClassMap<EntityMap>();
+                //csv.Context.RegisterClassMap<EntityMap>();
                 csv.WriteRecords(csvEntityDtos);
             }
         }
