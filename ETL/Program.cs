@@ -62,22 +62,9 @@ namespace ETL
                 HasHeaderRecord = true
             };
 
-            csvEntityDtos = csvEntityDtos.Select(c => new CSVEntityDto { 
-                FareAmount = c.FareAmount,
-                TipAmount = c.TipAmount,
-                TripDistance = c.TripDistance,
-                DOLocationID = c.DOLocationID,
-                PassengerCount = c.PassengerCount,
-                PULocationId = c.PULocationId,
-                StoreAndForwardFlag = c.StoreAndForwardFlag == "Y" ? "Yes" : "No",
-                TpepDropoffDateTime = c.TpepDropoffDateTime,
-                TpepPickupDateTime = c.TpepPickupDateTime,
-            });
-
             using (var writer = new StreamWriter(DUPLICATES_FILE_PATH))
             using (var csv = new CsvWriter(writer, config))
             {
-                //csv.Context.RegisterClassMap<EntityMap>();
                 csv.WriteRecords(csvEntityDtos);
             }
         }

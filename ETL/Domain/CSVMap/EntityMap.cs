@@ -23,8 +23,7 @@ namespace ETL.Domain.CSVMap
                     });
             Map(m => m.TripDistance).Name("trip_distance");
             Map(m => m.StoreAndForwardFlag)
-                .Name("store_and_fwd_flag")
-                .Convert(args => args.Row.GetField("store_and_fwd_flag").Trim() == "Y" ? "Yes" : "No");
+                .Name("store_and_fwd_flag");
             Map(m => m.PULocationId).Name("PULocationID");
             Map(m => m.DOLocationID).Name("DOLocationID");
             Map(m => m.FareAmount).Name("fare_amount");
