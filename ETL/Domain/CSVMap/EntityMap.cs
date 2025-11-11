@@ -18,13 +18,13 @@ namespace ETL.Domain.CSVMap
                 .Name("passenger_count")
                 .Convert(args =>
                     {
-                        var passangerCountString = args.Row.GetField("passenger_count");
+                        var passangerCountString = args.Row.GetField("passenger_count").Trim();
                         return string.IsNullOrEmpty(passangerCountString) ? 0 : int.Parse(passangerCountString);
                     });
             Map(m => m.TripDistance).Name("trip_distance");
             Map(m => m.StoreAndForwardFlag)
                 .Name("store_and_fwd_flag")
-                .Convert(args => args.Row.GetField("store_and_fwd_flag") == "Y" ? "Yes" : "No");
+                .Convert(args => args.Row.GetField("store_and_fwd_flag").Trim() == "Y" ? "Yes" : "No");
             Map(m => m.PULocationId).Name("PULocationID");
             Map(m => m.DOLocationID).Name("DOLocationID");
             Map(m => m.FareAmount).Name("fare_amount");
