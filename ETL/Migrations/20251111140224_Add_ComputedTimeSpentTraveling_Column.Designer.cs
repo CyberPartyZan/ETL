@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ETL.Migrations
 {
     [DbContext(typeof(ETLDbContext))]
-    [Migration("20251111133622_ComputedTripTime")]
-    partial class ComputedTripTime
+    [Migration("20251111140224_Add_ComputedTimeSpentTraveling_Column")]
+    partial class Add_ComputedTimeSpentTraveling_Column
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,9 @@ namespace ETL.Migrations
                     b.Property<bool>("StoreAndForwardFlag")
                         .HasColumnType("bit");
 
+                    b.Property<int>("TimeSpentTraveling")
+                        .HasColumnType("int");
+
                     b.Property<double>("TipAmount")
                         .HasColumnType("float");
 
@@ -57,9 +60,6 @@ namespace ETL.Migrations
 
                     b.Property<double>("TripDistance")
                         .HasColumnType("float");
-
-                    b.Property<int>("TripTimeMinutes")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

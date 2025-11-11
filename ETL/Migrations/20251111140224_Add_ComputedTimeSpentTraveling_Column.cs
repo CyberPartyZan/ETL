@@ -1,12 +1,11 @@
-﻿using ETL.Infrastructure.DataBase.Entities;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ETL.Migrations
 {
     /// <inheritdoc />
-    public partial class ComputedTripTime : Migration
+    public partial class Add_ComputedTimeSpentTraveling_Column : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,8 +15,6 @@ namespace ETL.Migrations
                 table: "ETLEntities",
                 type: "int",
                 nullable: false,
-                computedColumnSql: $"DATEDIFF(MINUTE, {nameof(ETLEntity.TpepPickupDateTime)}, {nameof(ETLEntity.TpepDropoffDateTime)})",
-                stored: true,
                 defaultValue: 0);
         }
 
