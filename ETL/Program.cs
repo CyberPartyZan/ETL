@@ -14,6 +14,10 @@ namespace ETL
 {
     internal class Program
     {
+        // TODO: Move to appsettings.json
+        public static const string CSV_FILE_PATH = "Data/sample-cab-data.csv";
+        public static const string DUPLICATES_FILE_PATH = "Data/sample-cab-data-duplicates.csv";
+
         static async Task Main(string[] args)
         {
             var uniqueRecords = GetUniqueCSVRecords();
@@ -22,7 +26,7 @@ namespace ETL
             await SaveUniqueCSVRecordsToDb(uniqueRecords);
         }
 
-        public static void SetupETLEntityTableColumns(DataTable table)
+        private static void SetupETLEntityTableColumns(DataTable table)
         {
             table.Columns.Add(nameof(ETLEntity.Id), typeof(Guid));
             table.Columns.Add(nameof(ETLEntity.TpepPickupDateTime), typeof(DateTime));
@@ -36,7 +40,7 @@ namespace ETL
             table.Columns.Add(nameof(ETLEntity.TipAmount), typeof(double));
         }
 
-        public static void AddCSVEntityDtoToETLEntityTable(DataTable table, CSVEntityDto csvEntityDto)
+        private static void AddCSVEntityDtoToETLEntityTable(DataTable table, CSVEntityDto csvEntityDto)
         {
             table.Rows.Add(Guid.NewGuid(),
                 csvEntityDto.TpepPickupDateTime,
@@ -57,7 +61,7 @@ namespace ETL
                 HasHeaderRecord = true
             };
 
-            using (var writer = new StreamWriter("Data/sample-cab-data-duplicates.csv"))
+            using (var writer = new StreamWriter(DUPLICATES_FILE_PATH))
             using (var csv = new CsvWriter(writer, config))
             {
                 csv.Context.RegisterClassMap<EntityMap>();
@@ -67,7 +71,7 @@ namespace ETL
 
         public static IEnumerable<CSVEntityDto> GetUniqueCSVRecords()
         {
-            using var reader = new StreamReader("Data/sample-cab-data.csv");
+            using var reader = new StreamReader(CSV_FILE_PATH);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
             csv.Context.RegisterClassMap<EntityMap>();
@@ -83,7 +87,7 @@ namespace ETL
 
         public static IEnumerable<CSVEntityDto> GetDuplicatedCSVRecords()
         {
-            using var reader = new StreamReader("Data/sample-cab-data.csv");
+            using var reader = new StreamReader(CSV_FILE_PATH);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
             csv.Context.RegisterClassMap<EntityMap>();
