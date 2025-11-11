@@ -12,7 +12,7 @@ namespace ETL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "TripTimeMinutes",
+                name: "TimeSpentTraveling",
                 table: "ETLEntities",
                 type: "int",
                 nullable: false,
@@ -25,7 +25,7 @@ namespace ETL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "TripTimeMinutes",
+                name: "TimeSpentTraveling",
                 table: "ETLEntities");
         }
     }
