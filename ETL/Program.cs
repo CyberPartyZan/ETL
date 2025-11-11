@@ -31,7 +31,7 @@ namespace ETL
             }
             catch (CsvHelper.WriterException writeEx)
             {
-                Console.WriteLine($"CSV writing exception occured - {readEx.Message}");
+                Console.WriteLine($"CSV writing exception occured - {writeEx.Message}");
             }
             catch (CsvHelper.ReaderException readEx)
             {
