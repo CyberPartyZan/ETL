@@ -22,8 +22,7 @@ namespace ETL.Domain.CSVMap
                         return string.IsNullOrEmpty(passangerCountString) ? 0 : int.Parse(passangerCountString);
                     });
             Map(m => m.TripDistance).Name("trip_distance");
-            Map(m => m.StoreAndForwardFlag)
-                .Name("store_and_fwd_flag");
+            Map(m => m.StoreAndForwardFlag).Name("store_and_fwd_flag");
             Map(m => m.PULocationId).Name("PULocationID");
             Map(m => m.DOLocationID).Name("DOLocationID");
             Map(m => m.FareAmount).Name("fare_amount");
