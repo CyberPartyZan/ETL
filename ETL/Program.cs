@@ -47,34 +47,6 @@ namespace ETL
             }
         }
 
-        private static void SetupETLEntityTableColumns(DataTable table)
-        {
-            table.Columns.Add(nameof(ETLEntity.Id), typeof(Guid));
-            table.Columns.Add(nameof(ETLEntity.TpepPickupDateTime), typeof(DateTime));
-            table.Columns.Add(nameof(ETLEntity.TpepDropoffDateTime), typeof(DateTime));
-            table.Columns.Add(nameof(ETLEntity.PassengerCount), typeof(int));
-            table.Columns.Add(nameof(ETLEntity.TripDistance), typeof(double));
-            table.Columns.Add(nameof(ETLEntity.StoreAndForwardFlag), typeof(bool));
-            table.Columns.Add(nameof(ETLEntity.PULocationId), typeof(int));
-            table.Columns.Add(nameof(ETLEntity.DOLocationID), typeof(int));
-            table.Columns.Add(nameof(ETLEntity.FareAmount), typeof(double));
-            table.Columns.Add(nameof(ETLEntity.TipAmount), typeof(double));
-        }
-
-        private static void AddCSVEntityDtoToETLEntityTable(DataTable table, CSVEntityDto csvEntityDto)
-        {
-            table.Rows.Add(Guid.NewGuid(),
-                csvEntityDto.TpepPickupDateTime,
-                csvEntityDto.TpepDropoffDateTime,
-                csvEntityDto.PassengerCount,
-                csvEntityDto.TripDistance,
-                csvEntityDto.StoreAndForwardFlag == "Yes" ? true : false,
-                csvEntityDto.PULocationId,
-                csvEntityDto.DOLocationID,
-                csvEntityDto.FareAmount,
-                csvEntityDto.TipAmount);
-        }
-
         public static void SaveDuplicatedCSVRecords(IEnumerable<CSVEntityDto> csvEntityDtos)
         {
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -147,6 +119,34 @@ namespace ETL
             // TODO: Make it write records in some kind of stream to use less memory for storing data in case we will perform a 10Gb CSV file
             await sqlBulk.WriteToServerAsync(table);
 
+        }
+
+        private static void SetupETLEntityTableColumns(DataTable table)
+        {
+            table.Columns.Add(nameof(ETLEntity.Id), typeof(Guid));
+            table.Columns.Add(nameof(ETLEntity.TpepPickupDateTime), typeof(DateTime));
+            table.Columns.Add(nameof(ETLEntity.TpepDropoffDateTime), typeof(DateTime));
+            table.Columns.Add(nameof(ETLEntity.PassengerCount), typeof(int));
+            table.Columns.Add(nameof(ETLEntity.TripDistance), typeof(double));
+            table.Columns.Add(nameof(ETLEntity.StoreAndForwardFlag), typeof(bool));
+            table.Columns.Add(nameof(ETLEntity.PULocationId), typeof(int));
+            table.Columns.Add(nameof(ETLEntity.DOLocationID), typeof(int));
+            table.Columns.Add(nameof(ETLEntity.FareAmount), typeof(double));
+            table.Columns.Add(nameof(ETLEntity.TipAmount), typeof(double));
+        }
+
+        private static void AddCSVEntityDtoToETLEntityTable(DataTable table, CSVEntityDto csvEntityDto)
+        {
+            table.Rows.Add(Guid.NewGuid(),
+                csvEntityDto.TpepPickupDateTime,
+                csvEntityDto.TpepDropoffDateTime,
+                csvEntityDto.PassengerCount,
+                csvEntityDto.TripDistance,
+                csvEntityDto.StoreAndForwardFlag == "Yes" ? true : false,
+                csvEntityDto.PULocationId,
+                csvEntityDto.DOLocationID,
+                csvEntityDto.FareAmount,
+                csvEntityDto.TipAmount);
         }
     }
 }
