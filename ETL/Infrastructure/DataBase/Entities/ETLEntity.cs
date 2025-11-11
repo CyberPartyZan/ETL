@@ -24,8 +24,8 @@ namespace ETL.Infrastructure.DataBase.Entities
         {
             var entity = new ETLEntity();
 
-            entity.TpepDropoffDateTime = dto.TpepDropoffDateTime;
-            entity.TpepPickupDateTime = dto.TpepPickupDateTime;
+            entity.TpepDropoffDateTime = dto.TpepDropoffDateTime.ToUniversalTime();
+            entity.TpepPickupDateTime = dto.TpepPickupDateTime.ToUniversalTime();
             entity.PassengerCount = dto.PassengerCount;
             entity.TripDistance = dto.TripDistance;
             entity.StoreAndForwardFlag = dto.StoreAndForwardFlag == "Yes" ? true : false;

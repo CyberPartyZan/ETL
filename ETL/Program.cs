@@ -19,29 +19,7 @@ namespace ETL
             var uniqueRecords = GetUniqueCSVRecords();
             var duplicates = GetDuplicatedCSVRecords();
             SaveDuplicatedCSVRecords(duplicates);
-
-            var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-            var connectionString = config.GetConnectionString("DefaultConnection");
-
-            using var sqlBulk = new SqlBulkCopy(connectionString)
-            {
-                DestinationTableName = nameof(ETLDbContext.ETLEntities)
-            };
-
-            // Convert your list to DataTable
-            var table = new DataTable();
-            SetupETLEntityTableColumns(table);
-
-            foreach (var csvEntityDto in uniqueRecords)
-            {
-                AddCSVEntityDtoToETLEntityTable(table, csvEntityDto);
-            }
-
-            // TODO: Make it write records in some kind of stream to use less memory for storing data in case we will perform a 10Gb CSV file
-            await sqlBulk.WriteToServerAsync(table);
+            await SaveUniqueCSVRecordsToDb(uniqueRecords);
         }
 
         public static void SetupETLEntityTableColumns(DataTable table)
@@ -65,7 +43,7 @@ namespace ETL
                 csvEntityDto.TpepDropoffDateTime,
                 csvEntityDto.PassengerCount,
                 csvEntityDto.TripDistance,
-                csvEntityDto.StoreAndForwardFlag,
+                csvEntityDto.StoreAndForwardFlag == "Yes" ? true : false,
                 csvEntityDto.PULocationId,
                 csvEntityDto.DOLocationID,
                 csvEntityDto.FareAmount,
@@ -118,6 +96,33 @@ namespace ETL
                 .ToList();
 
             return duplicates;
+        }
+
+        public static async Task SaveUniqueCSVRecordsToDb(IEnumerable<CSVEntityDto> uniqueRecords)
+        {
+            var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+            var connectionString = config.GetConnectionString("DefaultConnection");
+
+            using var sqlBulk = new SqlBulkCopy(connectionString)
+            {
+                DestinationTableName = nameof(ETLDbContext.ETLEntities)
+            };
+
+            // Convert your list to DataTable
+            var table = new DataTable();
+            SetupETLEntityTableColumns(table);
+
+            foreach (var csvEntityDto in uniqueRecords)
+            {
+                AddCSVEntityDtoToETLEntityTable(table, csvEntityDto);
+            }
+
+            // TODO: Make it write records in some kind of stream to use less memory for storing data in case we will perform a 10Gb CSV file
+            await sqlBulk.WriteToServerAsync(table);
+
         }
     }
 }
