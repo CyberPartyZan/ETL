@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using CsvHelper.Configuration;
+using System.Text.RegularExpressions;
 
 namespace ETL
 {
@@ -20,11 +21,30 @@ namespace ETL
 
         static async Task Main(string[] args)
         {
-            // TODO: Use one stream for performing both getUnique and duplicates operations
-            var uniqueRecords = GetUniqueCSVRecords();
-            var duplicates = GetDuplicatedCSVRecords();
-            SaveDuplicatedCSVRecords(duplicates);
-            await SaveUniqueCSVRecordsToDb(uniqueRecords);
+            try
+            {
+                // TODO: Use one stream for performing both getUnique and duplicates operations
+                var uniqueRecords = GetUniqueCSVRecords();
+                var duplicates = GetDuplicatedCSVRecords();
+                SaveDuplicatedCSVRecords(duplicates);
+                await SaveUniqueCSVRecordsToDb(uniqueRecords);
+            }
+            catch (CsvHelper.WriterException writeEx)
+            {
+                Console.WriteLine($"CSV writing exception occured - {readEx.Message}");
+            }
+            catch (CsvHelper.ReaderException readEx)
+            {
+                Console.WriteLine($"CSV reading exception occured - {readEx.Message}");
+            }
+            catch (CsvHelperException csvEx)
+            {
+                Console.WriteLine($"CSV Helper exception occured - {csvEx.Message}");
+            }
+            catch (Exception ex) { 
+                // TODO: Improve to Serilog
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private static void SetupETLEntityTableColumns(DataTable table)
