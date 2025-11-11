@@ -8,6 +8,7 @@ using ETL.Infrastructure.DataBase.Entities;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.Extensions.Configuration;
+using CsvHelper.Configuration;
 
 namespace ETL
 {
@@ -15,12 +16,9 @@ namespace ETL
     {
         static async Task Main(string[] args)
         {
-            using var reader = new StreamReader("Data/sample-cab-data.csv");
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-            csv.Context.RegisterClassMap<EntityMap>();
-            var records = csv.GetRecords<CSVEntityDto>();
-
+            var uniqueRecords = GetUniqueCSVRecords();
+            var duplicates = GetDuplicatedCSVRecords();
+            SaveDuplicatedCSVRecords(duplicates);
 
             var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
@@ -37,7 +35,7 @@ namespace ETL
             var table = new DataTable();
             SetupETLEntityTableColumns(table);
 
-            foreach (var csvEntityDto in records)
+            foreach (var csvEntityDto in uniqueRecords)
             {
                 AddCSVEntityDtoToETLEntityTable(table, csvEntityDto);
             }
@@ -71,6 +69,54 @@ namespace ETL
                 csvEntityDto.DOLocationID,
                 csvEntityDto.FareAmount,
                 csvEntityDto.TipAmount);
+        }
+
+        public static void SaveDuplicatedCSVRecords(IEnumerable<CSVEntityDto> csvEntityDtos)
+        {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true
+            };
+
+            using (var writer = new StreamWriter("Data/sample-cab-data-duplicates.csv"))
+            using (var csv = new CsvWriter(writer, config))
+            {
+                csv.Context.RegisterClassMap<EntityMap>();
+                csv.WriteRecords(csvEntityDtos);
+            }
+        }
+
+        public static IEnumerable<CSVEntityDto> GetUniqueCSVRecords()
+        {
+            using var reader = new StreamReader("Data/sample-cab-data.csv");
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            csv.Context.RegisterClassMap<EntityMap>();
+            var records = csv.GetRecords<CSVEntityDto>();
+
+            var uniqueRecords = records
+                .GroupBy(r => new { r.TpepPickupDateTime, r.TpepDropoffDateTime, r.PassengerCount })
+                .Select(g => g.First())
+                .ToList();
+
+            return uniqueRecords;
+        }
+
+        public static IEnumerable<CSVEntityDto> GetDuplicatedCSVRecords()
+        {
+            using var reader = new StreamReader("Data/sample-cab-data.csv");
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            csv.Context.RegisterClassMap<EntityMap>();
+            var records = csv.GetRecords<CSVEntityDto>();
+
+            var duplicates = records
+                .GroupBy(r => new { r.TpepPickupDateTime, r.TpepDropoffDateTime, r.PassengerCount })
+                .Where(g => g.Count() > 1)
+                .SelectMany(g => g)
+                .ToList();
+
+            return duplicates;
         }
     }
 }
