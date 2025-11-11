@@ -15,8 +15,8 @@ namespace ETL
     internal class Program
     {
         // TODO: Move to appsettings.json
-        public static const string CSV_FILE_PATH = "Data/sample-cab-data.csv";
-        public static const string DUPLICATES_FILE_PATH = "Data/sample-cab-data-duplicates.csv";
+        public const string CSV_FILE_PATH = "Data/sample-cab-data.csv";
+        public const string DUPLICATES_FILE_PATH = "Data/sample-cab-data-duplicates.csv";
 
         static async Task Main(string[] args)
         {

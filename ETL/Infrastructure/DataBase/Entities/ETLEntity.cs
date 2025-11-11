@@ -20,6 +20,8 @@ namespace ETL.Infrastructure.DataBase.Entities
         public double FareAmount { get; set; }
         public double TipAmount { get; set; }
 
+        public int TripTimeMinutes { get; private set; }
+
         public static ETLEntity FromDto(CSVEntityDto dto)
         {
             var entity = new ETLEntity();

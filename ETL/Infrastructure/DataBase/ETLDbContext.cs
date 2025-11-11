@@ -21,8 +21,6 @@ namespace ETL.Infrastructure.DataBase
 
             var connectionString = config.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString);
-            //optionsBuilder.UseSqlServer(
-            //    "Server=localhost;Database=ETLDb;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }
