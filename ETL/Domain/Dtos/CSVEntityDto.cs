@@ -12,7 +12,7 @@ namespace ETL.Domain.Dtos
         public DateTime TpepDropoffDateTime { get; set; }
         public int PassengerCount { get; set; }
         public double TripDistance { get; set; }
-        public bool StoreAndForwardFlag { get; set; }
+        public string StoreAndForwardFlag { get; set; }
         public int PULocationId { get; set; }
         public int DOLocationID { get; set; }
         public double FareAmount { get; set; }

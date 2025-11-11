@@ -28,13 +28,31 @@ namespace ETL.Infrastructure.DataBase.Entities
             entity.TpepPickupDateTime = dto.TpepPickupDateTime;
             entity.PassengerCount = dto.PassengerCount;
             entity.TripDistance = dto.TripDistance;
-            entity.StoreAndForwardFlag = dto.StoreAndForwardFlag;
+            entity.StoreAndForwardFlag = dto.StoreAndForwardFlag == "Yes" ? true : false;
             entity.PULocationId = dto.PULocationId;
             entity.DOLocationID = dto.DOLocationID;
             entity.FareAmount = dto.FareAmount;
             entity.TipAmount = dto.TipAmount;
 
             return entity;
+        }
+
+        public CSVEntityDto ToDto()
+        {
+            var dto = new CSVEntityDto();
+
+            dto.TpepDropoffDateTime = this.TpepDropoffDateTime;
+
+            dto.TpepPickupDateTime = this.TpepPickupDateTime;
+            dto.PassengerCount = this.PassengerCount;
+            dto.TripDistance = this.TripDistance;
+            dto.StoreAndForwardFlag = this.StoreAndForwardFlag ? "Yes" : "No";
+            dto.PULocationId = this.PULocationId;
+            dto.DOLocationID = this.DOLocationID;
+            dto.FareAmount = this.FareAmount;
+            dto.TipAmount = this.TipAmount;
+
+            return dto;
         }
     }
 }
